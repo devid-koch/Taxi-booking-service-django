@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pricing Configurations</title>
+</head>
+<body>
+    <h1>Pricing Configurations</h1>
+    <a href="{% url 'create_pricing_config' %}">Create New Pricing Configuration</a>
+    <ul>
+        {% for config in configs %}
+            <li>
+                <a href="{% url 'update_pricing_config' config.id %}">{{ config.name }}</a>
+                (Active: {{ config.is_active }})
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
