@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ pricing_config.name }} Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">{{ pricing_config.name }}</h1>
+        <p><strong>Created Time:</strong> {{ pricing_config.created_at }}</p>
+        <p><strong>Last Updated Time:</strong> {{ pricing_config.updated_at }}</p>
+        <p><strong>Active:</strong> {{ pricing_config.is_active }}</p>
+
+        <h2 class="mt-4">Day Pricing Configurations List</h2>
+        <ul class="list-group">
+            {% for day_config in day_pricing_configs %}
+                <li class="list-group-item text-capitalize">
+                    {{ day_config.day_of_week }}: 
+                    Base Price: {{ day_config.base_price }} | 
+                    Additional Price per km: {{ day_config.additional_price_per_km }} | 
+                    Waiting Charges: {{ day_config.waiting_charges }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <a href="{% url 'pricing_config_list' %}" class="btn btn-primary mt-4">Back to list</a>
+    </div>
+</body>
+</html>

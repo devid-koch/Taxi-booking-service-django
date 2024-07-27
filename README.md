@@ -1,17 +1,25 @@
-# Django Pricing Module
+# Pricing Configuration App
 
-This project is a web application with a configurable pricing module that supports differential pricing. It is built using Django and allows for flexible pricing configurations.
+This is a Django-based application to configure and manage pricing for a taxi booking service. The app includes APIs to estimate prices and generate invoices for rides, as well as admin views to manage pricing configurations.
 
 ## Features
 
-- Configurable pricing based on ride distance, time, waiting time, and day of the week.
-- Custom Django Admin interface for managing pricing configurations.
-- API endpoint to calculate the price based on the provided details.
+- CRUD operations for pricing configurations and day-specific pricing.
+- API endpoints for estimating ride prices and generating invoices.
+- Email notifications for generated invoices.
+- Integration with PostgreSQL via pgAdmin.
+- Connection pooling using PgBouncer.
 
-## Prerequisites
+## Requirements
 
-- Python 3.x
-- Django 3.x
+- Python 3.11
+- Django 4.x
+- PostgreSQL
+- PgBouncer
+- Django REST Framework
+
+## Installation
+
 
 ## Setup Instructions
 
@@ -29,9 +37,21 @@ This project is a web application with a configurable pricing module that suppor
     pip install -r requirements.txt
 
 4. **Set up the database:**
-    Here I am using sqlite
-    Create a database for the project.
-    Update the DATABASES setting in settings.py with your database configuration.
+    Set Up Environment Variables
+        Create a .env file in the project root and add your environment variables:
+
+        env
+        Copy code
+        DEBUG=True
+        SECRET_KEY=your_secret_key
+        EMAIL_HOST_USER=your_email@gmail.com
+        EMAIL_HOST_PASSWORD=your_app_password
+        DATABASE_URL=postgres://username:password@localhost:5432/pricing_config_db
+
+
+        Set Up PostgreSQL and PgBouncer
+        PostgreSQL: Ensure PostgreSQL is installed and running.
+        PgBouncer: Install and configure PgBouncer for connection pooling.
 
 5. **Run the migrations:**
     
@@ -48,19 +68,17 @@ This project is a web application with a configurable pricing module that suppor
 8. Access the application at http://127.0.0.1:8000/.
 
 
-## Admin Interface
+Email Configuration
+The application uses Gmail for sending emails. Make sure to:
 
-Access the Django Admin at http://127.0.0.1:8000/admin/.
-Log in with the superuser credentials created earlier.
-        **username: hp**
-        **password: 123**
-Manage pricing configurations via the Django Admin interface.
+Enable "Less Secure Apps" in your Google account settings or use an App Password if you have 2FA enabled.
+Update the EMAIL_HOST_USER and EMAIL_HOST_PASSWORD in your .env file.
 
 
 ## API Usage
 
 Endpoint
-POST [/pricing/api/calculate-price/]
+POST [/pricing/api/estimate-price/]
 
 **Request Body**
 {
@@ -78,13 +96,6 @@ POST [/pricing/api/calculate-price/]
     "price": "80.83"
 }
 
-## How to get the pricing config id
-
-ENDPOINT to fetch all configurations
-
-GET [/pricing/api/pricing-configs/]
-
-here you will get all the pricing configurations including id's for each price configuration
 
 
 ## Testing with Postman
@@ -93,7 +104,7 @@ here you will get all the pricing configurations including id's for each price c
 
     python manage.py runserver
 
-    Open Postman and create a new POST request to http://127.0.0.1:8000/pricing/api/calculate-price/.
+    Open Postman and create a new POST request to http://127.0.0.1:8000/pricing/api/estimate-price.
 
     Set the request body to JSON and add the following content:
 
@@ -112,4 +123,14 @@ here you will get all the pricing configurations including id's for each price c
     }
 
 
+    Generate Invoice: POST /pricing/api/generate-invoice/
 
+    {
+        "pricing_config_id": 1,
+        "distance": 10,
+        "travel_time": 2,
+        "waiting_time": 5,
+        "day": "monday",
+        "user_email":"email@gmail.com",
+        "total_tax_percentage":"18"
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pricing Configurations</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Pricing Configurations</h1>
+        <a href="{% url 'pricing_config_create' %}" class="btn btn-primary mb-3">Create Pricing Configuration</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Active</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for config in configs %}
+                    <tr>
+                        <td>{{ config.id }}</td>
+                        <td>{{ config.name }}</td>
+                        <td>{{ config.is_active }}</td>
+                        <td>
+                            <a href="{% url 'pricing_config_update' config.pk %}" class="btn btn-warning">Edit</a>
+                            <a href="{% url 'day_pricing_config_create' config.pk %}" class="btn btn-info">Add Day Pricing</a>
+                            <a href="{% url 'pricing_config_detail' config.pk %}" class="btn btn-info">View Day Configuration List</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

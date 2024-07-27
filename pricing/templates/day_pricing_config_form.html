@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Day Pricing Configuration Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Add Day Pricing Configuration for {{ pricing_config.name }}</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.day_of_week.label_tag }} {{ form.day_of_week }}
+            </div>
+            <div class="form-group">
+                {{ form.base_price.label_tag }} {{ form.base_price }}
+            </div>
+            <div class="form-group">
+                {{ form.base_distance_upto_km.label_tag }} {{ form.base_distance_upto_km }}
+            </div>
+            <div class="form-group">
+                {{ form.additional_price_per_km.label_tag }} {{ form.additional_price_per_km }}
+            </div>
+            <div class="form-group">
+                {{ form.time_multiplier_factor.label_tag }} {{ form.time_multiplier_factor }}
+            </div>
+            <div class="form-group">
+                {{ form.waiting_charges.label_tag }} {{ form.waiting_charges }}
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</body>
+</html>

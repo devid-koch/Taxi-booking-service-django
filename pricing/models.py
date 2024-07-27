@@ -45,3 +45,11 @@ class PricingLog(models.Model):
 
     def __str__(self):
         return f"Log for {self.pricing_config.name} at {self.change_timestamp}"
+
+class Invoice(models.Model):
+    user_email = models.EmailField()
+    ride_details = models.JSONField()
+    base_price = models.DecimalField(max_digits=10, decimal_places=2)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    total_tax = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)

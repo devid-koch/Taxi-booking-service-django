@@ -1,17 +1,14 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import create_pricing_config, update_pricing_config, create_day_pricing_config, pricing_list, PricingConfigViewSet, DayPricingConfigViewSet,calculate_price,delete_pricing_config
-
-router = DefaultRouter()
-router.register(r'pricing-configs', PricingConfigViewSet)
-router.register(r'day-pricing-configs', DayPricingConfigViewSet)
+from django.urls import path
+from . import views
+from .views import EstimatePrice, GenerateInvoice
 
 urlpatterns = [
-    path('create/', create_pricing_config, name='create_pricing_config'),
-    path('<int:pk>/update/', update_pricing_config, name='update_pricing_config'),
-    path('<int:pricing_config_id>/create-day/', create_day_pricing_config, name='create_day_pricing_config'),
-    path('', pricing_list, name='pricing_list'),
-    path('<int:pk>/delete/', delete_pricing_config, name='delete_pricing_config'),
-    path('api/', include(router.urls)),
-    path('api/calculate-price/', calculate_price, name='calculate_price'),
+    path('api/estimate-price/', EstimatePrice.as_view(), name='EstimatePrice'),
+    path('api/generate-invoice/', GenerateInvoice.as_view(), name='GenerateInvoice'),
+
+    path('', views.pricing_config_list, name='pricing_config_list'),
+    path('create/', views.pricing_config_create, name='pricing_config_create'),
+    path('pricing-configs/<int:pk>/', views.pricing_config_detail, name='pricing_config_detail'),
+    path('<int:pk>/update/', views.pricing_config_update, name='pricing_config_update'),
+    path('<int:pricing_config_id>/day-pricing/create/', views.day_pricing_config_create, name='day_pricing_config_create'),
 ]

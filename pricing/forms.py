@@ -1,5 +1,4 @@
 from django import forms
-from django.core.exceptions import ValidationError
 from .models import PricingConfig, DayPricingConfig
 
 class PricingConfigForm(forms.ModelForm):
@@ -10,24 +9,13 @@ class PricingConfigForm(forms.ModelForm):
 class DayPricingConfigForm(forms.ModelForm):
     class Meta:
         model = DayPricingConfig
-        fields = '__all__'
-        widgets = {
-            'day_of_week': forms.Select(choices=[
-                ('Mon', 'Monday'),
-                ('Tue', 'Tuesday'),
-                ('Wed', 'Wednesday'),
-                ('Thu', 'Thursday'),
-                ('Fri', 'Friday'),
-                ('Sat', 'Saturday'),
-                ('Sun', 'Sunday')
-            ])
-        }
+        fields = ['day_of_week', 'base_price', 'base_distance_upto_km', 'additional_price_per_km', 'time_multiplier_factor', 'waiting_charges']
 
-    def clean_day_of_week(self):
-        day_of_week = self.cleaned_data.get('day_of_week')
-        pricing_config = self.cleaned_data.get('pricing_config')
-
-        if DayPricingConfig.objects.filter(pricing_config=pricing_config, day_of_week=day_of_week).exists():
-            raise ValidationError(f"A configuration for {day_of_week} already exists in this pricing config.")
-
-        return day_of_week
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['day_of_week'].widget.attrs.update({'class': 'form-control'})
+        self.fields['base_price'].widget.attrs.update({'class': 'form-control'})
+        self.fields['base_distance_upto_km'].widget.attrs.update({'class': 'form-control'})
+        self.fields['additional_price_per_km'].widget.attrs.update({'class': 'form-control'})
+        self.fields['time_multiplier_factor'].widget.attrs.update({'class': 'form-control'})
+        self.fields['waiting_charges'].widget.attrs.update({'class': 'form-control'})
