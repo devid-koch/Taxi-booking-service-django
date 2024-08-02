@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Database Schema Overview</title>
+    <style>
+        .table-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .table-box {
+            border: 1px solid #333;
+            border-radius: 8px;
+            margin: 10px;
+            padding: 10px;
+            width: 350px;
+        }
+        .field-list {
+            list-style: none;
+            padding: 0;
+        }
+        .related-field-list {
+            list-style: none;
+            padding: 0;
+        }
+        .related-field-list li::before {
+            content: '→ ';
+        }
+    </style>
+</head>
+<body>
+    <h1>Database Schema Overview</h1>
+    <div class="table-container">
+        {% for model in schema_data %}
+        <div class="table-box">
+            <h2>{{ model.table_name }}</h2>
+            <h3>Fields:</h3>
+            <ul class="field-list">
+                {% for field in model.fields %}
+                <li>{{ field.name }} ({{ field.type }})</li>
+                {% endfor %}
+            </ul>
+            <h3>Related Fields:</h3>
+            <ul class="related-field-list">
+                {% for field in model.related_fields %}
+                <li>{{ field.name }} ({{ field.type }}) → {{ field.to }}</li>
+                {% empty %}
+                <li>No related fields</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

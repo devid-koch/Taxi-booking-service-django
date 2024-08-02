@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'pricing',
     'rest_framework',
     'axes',
+    'djangoviz',
 ]
 AUTHENTICATION_BACKENDS = [
     'axes.backends.AxesStandaloneBackend',

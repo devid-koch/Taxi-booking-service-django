@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Database Schema</title>
+        <style>
+            table{
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+            th, td{
+                border: 1px solid #ddd;
+                text-align: left;
+            }
+            th, td {
+                padding: 10px;
+                text-align: left;
+            }
+        </style>
+
+    </head>
+    <body>
+        <h1>Database Schema</h1>
+        {% for table, columns in tables %}
+        <h2> Table {{ table }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <td>Column Name</td>
+                    <td>Data Type</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for column, data_type in columns %}
+                    <tr>
+                        <td>{{ column }}</td>
+                        <td>{{ data_type }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endfor %}
+    </body>
+</html>

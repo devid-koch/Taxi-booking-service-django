@@ -12,6 +12,10 @@ from .forms import PricingConfigForm, DayPricingConfigForm
 from django.http import JsonResponse
 from .utils import calculate_price
 from django.conf import settings
+from django.db import connection
+from django.db.models import ForeignKey
+from django.apps import apps
+from django.db import models
 import logging
 
 logger = logging.getLogger(__name__)
@@ -131,3 +135,54 @@ def day_pricing_config_create(request, pricing_config_id):
     else:
         form = DayPricingConfigForm()
     return render(request, 'day_pricing_config_form.html', {'form': form, 'pricing_config': pricing_config})
+
+
+# def db_schema_view(request):
+#     tables = []
+#     with connection.cursor() as cursor:
+#         for table_name in connection.introspection.table_names():
+#             cursor.execute(f"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table_name}'")
+#             columns = cursor.fetchall()
+#             tables.append((table_name, columns))
+#     return render(request,'db_schema.html',{'tables':tables})
+
+
+def schema_overview(request):
+    all_models = apps.get_models()
+
+    schema_data = []
+    for model in all_models:
+        model_info = {
+            'table_name': model._meta.db_table,
+            'fields': [],
+            'related_fields': []
+        }
+
+        for field in model._meta.get_fields():
+            if isinstance(field, models.ForeignKey):
+                model_info['related_fields'].append({
+                    'name': field.name,
+                    'type': 'ForeignKey',
+                    'to': field.related_model._meta.db_table
+                })
+            elif isinstance(field, models.OneToOneField):
+                model_info['related_fields'].append({
+                    'name': field.name,
+                    'type': 'OneToOneField',
+                    'to': field.related_model._meta.db_table
+                })
+            elif isinstance(field, models.ManyToManyField):
+                model_info['related_fields'].append({
+                    'name': field.name,
+                    'type': 'ManyToManyField',
+                    'to': field.related_model._meta.db_table
+                })
+            else:
+                model_info['fields'].append({
+                    'name': field.name,
+                    'type': field.get_internal_type()
+                })
+
+        schema_data.append(model_info)
+
+    return render(request, 'schema_overview.html', {'schema_data': schema_data})
